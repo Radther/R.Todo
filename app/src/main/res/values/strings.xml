@@ -4,5 +4,13 @@
     <string name="app_name">R.Todo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="new_task_hint">New Task</string>
+
+    <array name="some_items">
+        <item>Shopping</item>
+        <item>App stuff</item>
+        <item>Movies to watch</item>
+        <item>Personal</item>
+    </array>
 
 </resources>

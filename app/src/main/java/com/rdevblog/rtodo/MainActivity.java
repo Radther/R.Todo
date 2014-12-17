@@ -1,17 +1,50 @@
 package com.rdevblog.rtodo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.Toolbar;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class MainActivity extends Activity {
+
+    EditText newTaskEditText;
+    ImageButton addNewTaskButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
+        setActionBar(toolbar);
+        getActionBar().setDisplayShowTitleEnabled(false);
+
+        Spinner spinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> itemAdapter   = ArrayAdapter.createFromResource(getActionBar().getThemedContext(),
+                R.array.some_items, R.layout.spinner_list_item);
+        itemAdapter.setDropDownViewResource(R.layout.black_simple_spinner_dropdown_item);
+        spinner.setAdapter(itemAdapter);
+
+        newTaskEditText = (MaterialEditText)findViewById(R.id.new_task_edit_text);
+        addNewTaskButton = (ImageButton)findViewById(R.id.add_new_task_button);
+        addNewTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTaskEditText.setText("");
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(newTaskEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        });
     }
 
 
