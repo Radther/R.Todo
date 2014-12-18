@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -22,7 +23,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.rdevblog.rtodo.objects.Task;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import io.realm.Realm;
 
 public class MainActivity extends Activity {
 
@@ -34,6 +38,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         setActionBar(toolbar);
@@ -106,6 +111,14 @@ public class MainActivity extends Activity {
                 newTaskAdd();
             }
         });
+
+
+        TaskListFragment taskListFragment = new TaskListFragment();
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.task_list_container, taskListFragment)
+                .commit();
+
     }
 
 
@@ -136,8 +149,18 @@ public class MainActivity extends Activity {
 
     /*Custom mehtods*/
     private void newTaskAdd(){
+
+        Realm realm = Realm.getInstance(this);
+        realm.beginTransaction();
+        Task newTask = realm.createObject(Task.class);
+        newTask.setTaskCompleted(false);
+        newTask.setTaskString(newTaskEditText.getText().toString());
+        Log.d("new Task object in database", newTask.toString());
+        realm.commitTransaction();
+
         newTaskEditText.setText("");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(newTaskEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
     }
 }
