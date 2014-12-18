@@ -3,13 +3,15 @@
     <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
 
         <!--Color-->
-        <item name="android:colorPrimary">#673AB7</item>
-        <item name="android:colorPrimaryDark">#512DA8</item>
-        <item name="android:colorAccent">#009688</item>
-        <item name="android:textColorPrimary">#212121</item>
-        <item name="android:textColorSecondary">#727272</item>
-        <item name="android:textColorTertiary">#B6B6B6</item>
-        <item name="android:textColor">#ffffff</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:textColorTertiary">@color/textColorTertiary</item>
+        <item name="android:textColor">@color/textColor</item>
+
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
 
     </style>
 

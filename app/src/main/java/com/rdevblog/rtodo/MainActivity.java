@@ -1,16 +1,25 @@
 package com.rdevblog.rtodo;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -19,6 +28,7 @@ public class MainActivity extends Activity {
 
     EditText newTaskEditText;
     ImageButton addNewTaskButton;
+    Boolean runTextAnimation = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +46,68 @@ public class MainActivity extends Activity {
         spinner.setAdapter(itemAdapter);
 
         newTaskEditText = (MaterialEditText)findViewById(R.id.new_task_edit_text);
+
+        newTaskEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    newTaskAdd();
+                }
+                return false;
+            }
+        });
+
+        newTaskEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (newTaskEditText.getText().toString().equals("")){
+                    ScaleAnimation tickShrink = new ScaleAnimation(1,0,1,0, Animation.RELATIVE_TO_SELF, (float)0.5, Animation.RELATIVE_TO_SELF, (float)0.5);
+                    tickShrink.setDuration(200);
+                    addNewTaskButton.startAnimation(tickShrink);
+                    addNewTaskButton.setVisibility(View.GONE);
+
+                    ScaleAnimation editTextExpand = new ScaleAnimation((float) .8, 1, 1, 1);
+                    editTextExpand.setDuration(200);
+                    newTaskEditText.startAnimation(editTextExpand);
+
+                    runTextAnimation = true;
+                }
+                else {
+                    if (runTextAnimation) {
+                        addNewTaskButton.setVisibility(View.VISIBLE);
+                        ScaleAnimation tickExpand = new ScaleAnimation(0,1,0,1, Animation.RELATIVE_TO_SELF, (float)0.5, Animation.RELATIVE_TO_SELF, (float)0.5);
+                        tickExpand.setDuration(200);
+                        addNewTaskButton.startAnimation(tickExpand);
+
+                        ScaleAnimation editTextShrink = new ScaleAnimation((float) 1.2, 1, 1, 1);
+                        editTextShrink.setDuration(200);
+                        newTaskEditText.startAnimation(editTextShrink);
+
+                        runTextAnimation = false;
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         addNewTaskButton = (ImageButton)findViewById(R.id.add_new_task_button);
         addNewTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newTaskEditText.setText("");
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(newTaskEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                newTaskAdd();
             }
         });
     }
+
 
 
     @Override
@@ -69,5 +131,13 @@ public class MainActivity extends Activity {
         //I have made a change
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /*Custom mehtods*/
+    private void newTaskAdd(){
+        newTaskEditText.setText("");
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(newTaskEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

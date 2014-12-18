@@ -34,10 +34,11 @@
         android:layout_alignBottom="@id/main_toolbar"
         android:orientation="horizontal"
         android:elevation="4dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        >
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            app:baseColor="#ffffff"
+            app:baseColor="@color/textColor"
             app:primaryColor="@color/colorAccent"
             app:floatingLabel="highlight"
             android:layout_marginLeft="48dp"
@@ -45,7 +46,6 @@
             android:layout_height="wrap_content"
             android:hint="@string/new_task_hint"
             android:textSize="28sp"
-            android:textColor="#ffffff"
             android:textColorHint="#B6B6B6"
             android:layout_weight="1"
             android:inputType="textCapSentences"
@@ -58,7 +58,8 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_done_white_48dp"
             android:layout_margin="8dp"
-            android:id="@+id/add_new_task_button"/>
+            android:id="@+id/add_new_task_button"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
