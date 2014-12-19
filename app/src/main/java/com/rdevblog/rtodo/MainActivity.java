@@ -2,6 +2,7 @@ package com.rdevblog.rtodo;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -162,5 +163,9 @@ public class MainActivity extends Activity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(newTaskEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
+        TaskListFragment taskListFragment = (TaskListFragment)getFragmentManager().findFragmentById(R.id.task_list_container);
+        taskListFragment.onNewTaskCreated();
+
     }
+
 }

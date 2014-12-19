@@ -21,8 +21,10 @@ import io.realm.Realm;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TaskListFragment extends Fragment {
+public class TaskListFragment extends Fragment{
 
+
+    ListView taskListView;
 
     public TaskListFragment() {
         // Required empty public constructor
@@ -35,7 +37,7 @@ public class TaskListFragment extends Fragment {
         View view =
             inflater.inflate(R.layout.fragment_task_list, container, false);
 
-        ListView taskListView = (ListView) view.findViewById(R.id.task_list_view);
+        taskListView = (ListView) view.findViewById(R.id.task_list_view);
 
         LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.list_layout_controller);
 
@@ -47,5 +49,7 @@ public class TaskListFragment extends Fragment {
         return view;
     }
 
-
+    public void onNewTaskCreated() {
+        taskListView.startLayoutAnimation();
+    }
 }
