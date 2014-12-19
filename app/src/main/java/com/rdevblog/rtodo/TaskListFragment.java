@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -34,6 +36,10 @@ public class TaskListFragment extends Fragment {
             inflater.inflate(R.layout.fragment_task_list, container, false);
 
         ListView taskListView = (ListView) view.findViewById(R.id.task_list_view);
+
+        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.list_layout_controller);
+
+        taskListView.setLayoutAnimation(animationController);
 
         final TaskListAdapter taskListAdapter = new TaskListAdapter(getActivity(), Realm.getInstance(getActivity()).where(Task.class).findAll(), true);
         taskListView.setAdapter(taskListAdapter);

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#673AB7</color>
-    <color name="colorPrimaryDark">#512DA8</color>
-    <color name="colorAccent">#009688</color>
-    <color name="colorAccentClicked">#4DB6AC</color>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorAccent">#673AB7</color>
+    <color name="colorAccentClicked">#ff7f5fb7</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#727272</color>
     <color name="textColorTertiary">#B6B6B6</color>
     <color name="textColor">#ffffff</color>
 </resources>
+
+<!--<color name="colorPrimary">#673AB7</color>-->
+<!--<color name="colorPrimaryDark">#512DA8</color>-->
+<!--<color name="colorAccent">#009688</color>-->
+<!--<color name="colorAccentClicked">#4DB6AC</color>-->
+<!--<color name="textColorPrimary">#212121</color>-->
+<!--<color name="textColorSecondary">#727272</color>-->
+<!--<color name="textColorTertiary">#B6B6B6</color>-->
+<!--<color name="textColor">#ffffff</color>-->
