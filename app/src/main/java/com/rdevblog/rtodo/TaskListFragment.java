@@ -3,8 +3,11 @@ package com.rdevblog.rtodo;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -12,8 +15,10 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.rdevblog.rtodo.adapters.TaskListAdapter;
+import com.rdevblog.rtodo.adapters.TaskRecyclerAdapter;
 import com.rdevblog.rtodo.objects.Task;
 
 import io.realm.Realm;
@@ -25,7 +30,7 @@ import io.realm.Realm;
 public class TaskListFragment extends Fragment{
 
 
-    ListView taskListView;
+    RecyclerView taskListView;
 
     public TaskListFragment() {
         // Required empty public constructor
@@ -38,14 +43,13 @@ public class TaskListFragment extends Fragment{
         View view =
             inflater.inflate(R.layout.fragment_task_list, container, false);
 
-        taskListView = (ListView) view.findViewById(R.id.task_list_view);
+        taskListView = (RecyclerView) view.findViewById(R.id.task_list_view);
 
-        final TaskListAdapter taskListAdapter = new TaskListAdapter(getActivity(), Realm.getInstance(getActivity()).where(Task.class).findAll(), true);
-        taskListView.setAdapter(taskListAdapter);
+        TaskRecyclerAdapter taskRecyclerAdapter = new TaskRecyclerAdapter(Realm.getInstance(getActivity()).where(Task.class).findAll(), getActivity());
+        taskListView.setAdapter(taskRecyclerAdapter);
 
-
-        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.list_layout_controller);
-        taskListView.setLayoutAnimation(animationController);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        taskListView.setLayoutManager(mLayoutManager);
 
         return view;
     }
@@ -53,16 +57,10 @@ public class TaskListFragment extends Fragment{
 
     public void onNewTaskCreated() {
 
-        for (int i = 0; i < taskListView.getChildCount(); i++) {
-            if (i == 0){
-                Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.enter_list_view_anim);
-                taskListView.getChildAt(i).startAnimation(animation);
-            }
-            else {
-                Animation animation = AnimationUtils.loadAnimation(getActivity(),R.anim.move_down_list_view_anim);
-                taskListView.getChildAt(i).startAnimation(animation);
-            }
-        }
+        taskListView.getAdapter().notifyDataSetChanged();
+
+
+
     }
 
 
