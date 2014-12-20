@@ -81,11 +81,7 @@ public class TaskListAdapter extends RealmBaseAdapter<Task> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Realm realm = Realm.getInstance(context);
-                realm.beginTransaction();
-                task.setTaskCompleted(!task.isTaskCompleted());
-                realm.commitTransaction();
-                realm.close();
+
             }
         });
         convertView.setOnTouchListener(new View.OnTouchListener() {
@@ -106,6 +102,13 @@ public class TaskListAdapter extends RealmBaseAdapter<Task> {
                             realm.commitTransaction();
                             realm.close();
                         }
+                        else {
+                            Realm realm = Realm.getInstance(context);
+                            realm.beginTransaction();
+                            task.setTaskCompleted(!task.isTaskCompleted());
+                            realm.commitTransaction();
+                            realm.close();
+                        }
                         break;
                 }
                 return false;
@@ -119,5 +122,7 @@ public class TaskListAdapter extends RealmBaseAdapter<Task> {
     public RealmResults<Task> getRealmResults(){
         return realmResults;
     }
+
+
 
 }

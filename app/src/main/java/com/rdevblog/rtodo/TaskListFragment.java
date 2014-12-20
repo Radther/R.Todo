@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
@@ -39,17 +40,30 @@ public class TaskListFragment extends Fragment{
 
         taskListView = (ListView) view.findViewById(R.id.task_list_view);
 
-        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.list_layout_controller);
-
-        taskListView.setLayoutAnimation(animationController);
-
         final TaskListAdapter taskListAdapter = new TaskListAdapter(getActivity(), Realm.getInstance(getActivity()).where(Task.class).findAll(), true);
         taskListView.setAdapter(taskListAdapter);
+
+
+        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.list_layout_controller);
+        taskListView.setLayoutAnimation(animationController);
 
         return view;
     }
 
+
     public void onNewTaskCreated() {
-        taskListView.startLayoutAnimation();
+
+        for (int i = 0; i < taskListView.getChildCount(); i++) {
+            if (i == 0){
+                Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.enter_list_view_anim);
+                taskListView.getChildAt(i).startAnimation(animation);
+            }
+            else {
+                Animation animation = AnimationUtils.loadAnimation(getActivity(),R.anim.move_down_list_view_anim);
+                taskListView.getChildAt(i).startAnimation(animation);
+            }
+        }
     }
+
+
 }
