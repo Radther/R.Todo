@@ -45,7 +45,7 @@ public class TaskListFragment extends Fragment{
 
         taskListView = (RecyclerView) view.findViewById(R.id.task_list_view);
 
-        TaskRecyclerAdapter taskRecyclerAdapter = new TaskRecyclerAdapter(Realm.getInstance(getActivity()).where(Task.class).findAll(), getActivity());
+        TaskRecyclerAdapter taskRecyclerAdapter = new TaskRecyclerAdapter(Realm.getInstance(getActivity().getApplicationContext()).where(Task.class).findAll(), getActivity());
         taskListView.setAdapter(taskRecyclerAdapter);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

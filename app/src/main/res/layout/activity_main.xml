@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@android:color/white">
 
     <Toolbar
         android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="@dimen/toolbar_minimized_height"
         android:background="?android:colorPrimary"
         android:minHeight="?android:actionBarSize"
         android:gravity="top"
@@ -23,10 +24,9 @@
         android:id="@+id/spinner"
         android:gravity="center"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:elevation="4dp"
         />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,7 +49,8 @@
             android:textColorHint="#B6B6B6"
             android:layout_weight="1"
             android:inputType="textCapSentences"
-            android:id="@+id/new_task_edit_text"/>
+            android:id="@+id/new_task_edit_text"
+            android:visibility="gone"/>
 
         <ImageButton
             android:layout_width="48dp"
@@ -68,6 +69,18 @@
         android:layout_height="match_parent"
         android:layout_below="@id/main_toolbar"
         android:id="@+id/task_list_container"/>
+
+    <com.melnykov.fab.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccent"
+        app:fab_colorRipple="@color/colorAccentClicked"
+        android:src="@drawable/ic_done_white_24dp"
+        android:id="@+id/new_task_fab"/>
 
 
 </RelativeLayout>

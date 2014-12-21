@@ -101,6 +101,9 @@ public class TaskListAdapter extends RealmBaseAdapter<Task> {
                             task.removeFromRealm();
                             realm.commitTransaction();
                             realm.close();
+
+
+
                         }
                         else {
                             Realm realm = Realm.getInstance(context);

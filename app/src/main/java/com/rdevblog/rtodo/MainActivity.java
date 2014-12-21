@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,41 +16,109 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.melnykov.fab.FloatingActionButton;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.rdevblog.rtodo.adapters.TaskRecyclerAdapter;
 import com.rdevblog.rtodo.objects.Task;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import io.realm.Realm;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity{
 
-    EditText newTaskEditText;
-    ImageButton addNewTaskButton;
-    Boolean runTextAnimation = true;
+    private EditText newTaskEditText;
+    private ImageButton addNewTaskButton;
+    private Boolean runTextAnimation = true;
+
+    private boolean newTaskOpen = false;
+
+    FrameLayout taskListFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
+        final Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         setActionBar(toolbar);
         getActionBar().setDisplayShowTitleEnabled(false);
+
+        taskListFrameLayout = (FrameLayout)findViewById(R.id.task_list_container);
 
         Spinner spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> itemAdapter   = ArrayAdapter.createFromResource(getActionBar().getThemedContext(),
                 R.array.some_items, R.layout.spinner_list_item);
         itemAdapter.setDropDownViewResource(R.layout.black_simple_spinner_dropdown_item);
         spinner.setAdapter(itemAdapter);
+
+        toolbar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.toolbar_minimized_height);
+
+        FloatingActionButton newTaskFab = (FloatingActionButton)findViewById(R.id.new_task_fab);
+        newTaskFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!newTaskOpen){
+                    int listFrameLayoutBefore = taskListFrameLayout.getTop();
+
+                    toolbar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.toolbar_maximised_height);
+                    newTaskEditText.setVisibility(View.VISIBLE);
+                    newTaskOpen = true;
+
+                    float beforeScale = getResources().getDimension(R.dimen.toolbar_minimized_height)/getResources().getDimension(R.dimen.toolbar_maximised_height);
+                    Animation toolbarScaleAnimation = new ScaleAnimation(1,1,beforeScale, 1);
+                    toolbarScaleAnimation.setDuration(200);
+                    toolbar.startAnimation(toolbarScaleAnimation);
+
+                    Animation editTextScaleAnimation = new ScaleAnimation(0,1,1,1);
+                    editTextScaleAnimation.setDuration(200);
+                    editTextScaleAnimation.setStartOffset(200);
+                    newTaskEditText.startAnimation(editTextScaleAnimation);
+                    newTaskEditText.setFocusable(true);
+
+                    Animation frameLayoutTranslateAnimation = new TranslateAnimation(0,0,-listFrameLayoutBefore,0);
+                    frameLayoutTranslateAnimation.setDuration(200);
+
+                    taskListFrameLayout.startAnimation(frameLayoutTranslateAnimation);
+
+                }
+                else {
+
+                    toolbar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.toolbar_minimized_height);
+                    newTaskEditText.setVisibility(View.GONE);
+                    newTaskOpen = false;
+
+                    int listFrameLayoutBefore = taskListFrameLayout.getTop();
+
+                    float beforeScale = getResources().getDimension(R.dimen.toolbar_maximised_height)/getResources().getDimension(R.dimen.toolbar_minimized_height);
+                    Animation animation = new ScaleAnimation(1,1,beforeScale, 1);
+                    animation.setDuration(200);
+                    toolbar.startAnimation(animation);
+
+                    Animation frameLayoutTranslateAnimation = new TranslateAnimation(0,0,listFrameLayoutBefore,0);
+                    frameLayoutTranslateAnimation.setStartOffset(50);
+                    frameLayoutTranslateAnimation.setDuration(200);
+
+                    taskListFrameLayout.startAnimation(frameLayoutTranslateAnimation);
+
+                }
+
+            }
+        });
 
         newTaskEditText = (MaterialEditText)findViewById(R.id.new_task_edit_text);
 
@@ -169,3 +238,26 @@ public class MainActivity extends Activity {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

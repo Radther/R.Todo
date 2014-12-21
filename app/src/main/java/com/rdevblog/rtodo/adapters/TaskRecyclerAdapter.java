@@ -1,5 +1,6 @@
 package com.rdevblog.rtodo.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,6 +15,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.rdevblog.rtodo.MainActivity;
 import com.rdevblog.rtodo.R;
 import com.rdevblog.rtodo.objects.Task;
 
@@ -26,10 +31,10 @@ import io.realm.RealmResults;
 public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder> {
 
     private RealmResults<Task> realmResults;
-    private Context context;
+    private Activity context;
 
 
-    public TaskRecyclerAdapter(RealmResults<Task> realmResults, Context context) {
+    public TaskRecyclerAdapter(RealmResults<Task> realmResults, Activity context) {
         this.realmResults = realmResults;
         this.context = context;
     }
@@ -52,7 +57,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
         View itemHolder = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_list_item, parent, false);
 
-        return new TaskViewHolder(itemHolder, new TaskViewHolder.OnTaskViewHolder() {
+        return new TaskViewHolder(itemHolder, context, new TaskViewHolder.OnTaskViewHolder() {
             @Override
             public void onDeleteTask() {
                 notifyDataSetChanged();
@@ -71,10 +76,13 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
         OnTaskViewHolder mListener;
 
-        public TaskViewHolder(View itemView, OnTaskViewHolder listener) {
+        Activity mContext;
+
+        public TaskViewHolder(View itemView, Activity context, OnTaskViewHolder listener) {
             super(itemView);
 
             mListener = listener;
+            mContext = context;
 
             taskStringTextView = (TextView) itemView.findViewById(R.id.task_string_textView);
             taskCompletedCheckBox = (CheckBox) itemView.findViewById(R.id.task_completed_checkbox);
@@ -125,11 +133,33 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
                         Realm realm = Realm.getInstance(v.getContext());
                         realm.beginTransaction();
+                        final String taskText = task.getTaskString();
+                        final boolean taskCompleted = task.isTaskCompleted();
                         task.removeFromRealm();
                         realm.commitTransaction();
                         realm.close();
 
                         mListener.onDeleteTask();
+
+                        SnackbarManager.show(Snackbar.with(mContext)
+                                .text("Task Deleted!")
+                                .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                                .actionLabel("Undo")
+                                .actionColor(Color.YELLOW)
+                                .actionListener(new ActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(Snackbar snackbar) {
+                                        Realm realm = Realm.getInstance(mContext);
+                                        realm.beginTransaction();
+                                        Task oldTask = realm.createObject(Task.class);
+                                        oldTask.setTaskString(taskText);
+                                        oldTask.setTaskCompleted(taskCompleted);
+                                        realm.commitTransaction();
+                                        mListener.onDeleteTask();
+                                    }
+                                }), mContext);
+
+
 
                     }
                     else {
