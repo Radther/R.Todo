@@ -95,6 +95,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
             if (task.isTaskCompleted()){
                 taskStringTextView.setPaintFlags(taskStringTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 taskStringTextView.setTextColor(Color.parseColor("#727272"));
+
             }
         }
 
