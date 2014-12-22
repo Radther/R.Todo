@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Task List"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create a new Task List for storing your Tasks."
+        android:textColor="@color/textColorSecondary"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_list_name_editText"
+        android:hint="Task List name"
+        app:maxCharacters="15"
+        app:floatingLabel="highlight"
+        android:textSize="18sp"/>
+
+</LinearLayout>

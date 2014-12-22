@@ -6,13 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="new_task_hint">New Task</string>
 
-    <array name="some_items">
-        <item>Shopping</item>
-        <item>App stuff</item>
-        <item>Movies to watch</item>
-        <item>Personal</item>
-    </array>
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

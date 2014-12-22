@@ -21,6 +21,7 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 import com.rdevblog.rtodo.MainActivity;
 import com.rdevblog.rtodo.R;
 import com.rdevblog.rtodo.objects.Task;
+import com.rdevblog.rtodo.objects.TaskList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -135,6 +136,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
                         realm.beginTransaction();
                         final String taskText = task.getTaskString();
                         final boolean taskCompleted = task.isTaskCompleted();
+                        final TaskList taskList = task.getTaskList();
                         task.removeFromRealm();
                         realm.commitTransaction();
                         realm.close();
@@ -154,6 +156,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
                                         Task oldTask = realm.createObject(Task.class);
                                         oldTask.setTaskString(taskText);
                                         oldTask.setTaskCompleted(taskCompleted);
+                                        oldTask.setTaskList(taskList);
                                         realm.commitTransaction();
                                         mListener.onDeleteTask();
                                     }

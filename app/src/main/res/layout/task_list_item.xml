@@ -10,7 +10,7 @@
         android:id="@+id/task_completed_checkbox"
         android:layout_marginLeft="16dp"
         android:layout_centerVertical="true"
-        />
+        android:clickable="false"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -23,5 +23,6 @@
         android:paddingLeft="72dp"
         android:textColor="@color/textColorPrimary"
         android:layout_centerVertical="true"
-        android:id="@+id/task_string_textView"/>
+        android:id="@+id/task_string_textView"
+        />
 </RelativeLayout>

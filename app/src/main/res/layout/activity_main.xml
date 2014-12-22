@@ -27,6 +27,15 @@
         android:layout_marginTop="8dp"
         android:elevation="4dp"
         />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_done_white_24dp"
+        android:id="@+id/new_task_list_button"
+        android:layout_alignRight="@id/main_toolbar"
+        android:elevation="4dp"
+        android:background="@android:color/transparent"
+        android:padding="16dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,7 +69,8 @@
             android:src="@drawable/ic_done_white_48dp"
             android:layout_margin="8dp"
             android:id="@+id/add_new_task_button"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:contentDescription="Add task button"/>
 
     </LinearLayout>
 

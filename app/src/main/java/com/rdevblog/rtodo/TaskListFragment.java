@@ -20,8 +20,10 @@ import android.widget.Toast;
 import com.rdevblog.rtodo.adapters.TaskListAdapter;
 import com.rdevblog.rtodo.adapters.TaskRecyclerAdapter;
 import com.rdevblog.rtodo.objects.Task;
+import com.rdevblog.rtodo.objects.TaskList;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 /**
@@ -45,7 +47,13 @@ public class TaskListFragment extends Fragment{
 
         taskListView = (RecyclerView) view.findViewById(R.id.task_list_view);
 
-        TaskRecyclerAdapter taskRecyclerAdapter = new TaskRecyclerAdapter(Realm.getInstance(getActivity().getApplicationContext()).where(Task.class).findAll(), getActivity());
+        Bundle bundle = getArguments();
+        String taskListName = bundle.getString(MainActivity.TASKLISTNAMETAG);
+
+        Realm realm = Realm.getInstance(getActivity());
+        RealmResults<Task> realmResults = realm.where(Task.class).equalTo("taskList.ListName", taskListName).findAll();
+
+        TaskRecyclerAdapter taskRecyclerAdapter = new TaskRecyclerAdapter(realmResults, getActivity());
         taskListView.setAdapter(taskRecyclerAdapter);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

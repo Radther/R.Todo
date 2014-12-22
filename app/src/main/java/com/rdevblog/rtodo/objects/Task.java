@@ -1,5 +1,7 @@
 package com.rdevblog.rtodo.objects;
 
+import java.util.UUID;
+
 import io.realm.RealmObject;
 
 /**
@@ -9,6 +11,8 @@ public class Task extends RealmObject {
     private String taskString;
 
     private boolean taskCompleted;
+
+    private TaskList taskList;
 
     public String getTaskString() {
         return taskString;
@@ -24,5 +28,13 @@ public class Task extends RealmObject {
 
     public void setTaskCompleted(boolean taskCompleted) {
         this.taskCompleted = taskCompleted;
+    }
+
+    public TaskList getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(TaskList taskList) {
+        this.taskList = taskList;
     }
 }
