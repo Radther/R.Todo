@@ -3,6 +3,7 @@ package com.rdevblog.rtodo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,8 +27,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
+import com.nispok.snackbar.Snackbar;
 import com.rdevblog.rtodo.adapters.SpinnerTaskListAdapter;
+import com.rdevblog.rtodo.adapters.TaskRecyclerAdapter;
 import com.rdevblog.rtodo.objects.Task;
 import com.rdevblog.rtodo.objects.TaskList;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -35,23 +39,25 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class MainActivity extends Activity{
+public class MainActivity extends Activity implements TaskRecyclerAdapter.TaskViewHolder.OnSnackbarAction{
 
     private EditText newTaskEditText;
     private ImageButton addNewTaskButton;
     private Boolean runTextAnimation = true;
 
-    private ImageButton newTaskListButton;
-
     private ArrayAdapter<TaskList> itemAdapter;
 
     private boolean newTaskOpen = false;
 
+    private FloatingActionButton newTaskFab;
+
+    private Spinner spinner;
+
     public final static String TASKLISTNAMETAG = "taskListNameForFragment";
 
-    TaskList taskList;
+    private TaskList taskList;
 
-    FrameLayout taskListFrameLayout;
+    private FrameLayout taskListFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,7 @@ public class MainActivity extends Activity{
 
         final RealmResults<TaskList> taskLists = Realm.getInstance(this).where(TaskList.class).findAll();
 
-        final Spinner spinner = (Spinner)findViewById(R.id.spinner);
+        spinner = (Spinner)findViewById(R.id.spinner);
         itemAdapter = new SpinnerTaskListAdapter(this, R.layout.spinner_list_item, taskLists);
         itemAdapter.setDropDownViewResource(R.layout.black_simple_spinner_dropdown_item);
         spinner.setAdapter(itemAdapter);
@@ -120,7 +126,7 @@ public class MainActivity extends Activity{
 
         toolbar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.toolbar_minimized_height);
 
-        FloatingActionButton newTaskFab = (FloatingActionButton)findViewById(R.id.new_task_fab);
+        newTaskFab = (FloatingActionButton)findViewById(R.id.new_task_fab);
         newTaskFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,14 +242,6 @@ public class MainActivity extends Activity{
             }
         });
 
-        newTaskListButton = (ImageButton)findViewById(R.id.new_task_list_button);
-        newTaskListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTaskListDialog();
-            }
-        });
-
     }
 
 
@@ -263,9 +261,17 @@ public class MainActivity extends Activity{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        switch (id){
+            case R.id.action_new_list:
+                showNewTaskListDialog();
+                break;
+            case R.id.action_delete_list:
+                deleteTaskListDialog();
+                break;
+            default:
+                break;
+        }
+
         //I have made a change
 
         return super.onOptionsItemSelected(item);
@@ -293,7 +299,7 @@ public class MainActivity extends Activity{
     }
 
 
-    private void showTaskListDialog(){
+    private void showNewTaskListDialog(){
 
         LayoutInflater inflater = LayoutInflater.from(this);
         final View newTaskListDialog = inflater.inflate(R.layout.new_task_list_dialog, null);
@@ -328,6 +334,64 @@ public class MainActivity extends Activity{
 
     }
 
+    private void deleteTaskListDialog(){
+
+        new MaterialDialog.Builder(this)
+                .title("Delete Task List")
+                .content("This will delete a task list and all the tasks inside it. You can't get this back after it's gone.")
+                .positiveText("Delete")
+                .negativeText("Cancel")
+                .positiveColor(Color.RED)
+                .negativeColor(R.color.textColorPrimary)
+                .callback(new MaterialDialog.Callback() {
+                    @Override
+                    public void onNegative(MaterialDialog materialDialog) {
+
+                    }
+
+                    @Override
+                    public void onPositive(MaterialDialog materialDialog) {
+                        Realm realm = Realm.getInstance(getApplicationContext());
+                        realm.beginTransaction();
+                        RealmResults<Task> realmResults = realm.where(Task.class).equalTo("taskList.ListName", taskList.getListName()).findAll();
+                        for (int i = 0; i < realmResults.size() - 1; i++) {
+                            realmResults.get(i).removeFromRealm();
+                        }
+                        taskList.removeFromRealm();
+                        realm.commitTransaction();
+                        realm.close();
+                        spinner.setSelection(0);
+                    }
+                })
+                .build()
+                .show();
+
+    }
+
+    @Override
+    public void onSnackBarShow(Snackbar snackbar) {
+        float currentY = newTaskFab.getY();
+        float newY = newTaskFab.getY()-snackbar.getHeight();
+
+        newTaskFab.setY(newY);
+
+//        Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,0,Animation.RELATIVE_TO_SELF,Animation.ABSOLUTE,0,currentY,Animation.ABSOLUTE, newY);
+//        animation.setDuration(200);
+//        newTaskFab.startAnimation(animation);
+    }
+
+    @Override
+    public void onSnackBarDismiss(Snackbar snackbar) {
+        float currentY = newTaskFab.getY();
+        float newY = newTaskFab.getY()+snackbar.getHeight();
+
+        newTaskFab.setY(newY);
+
+//        Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,0,Animation.RELATIVE_TO_SELF,0,Animation.ABSOLUTE,currentY,Animation.ABSOLUTE, newY);
+//        animation.setDuration(200);
+//        newTaskFab.startAnimation(animation);
+        
+    }
 }
 
 

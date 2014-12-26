@@ -1,7 +1,6 @@
 package com.rdevblog.rtodo.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
@@ -10,15 +9,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
-import com.rdevblog.rtodo.MainActivity;
+import com.nispok.snackbar.listeners.EventListener;
 import com.rdevblog.rtodo.R;
 import com.rdevblog.rtodo.objects.Task;
 import com.rdevblog.rtodo.objects.TaskList;
@@ -63,6 +60,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
             public void onDeleteTask() {
                 notifyDataSetChanged();
             }
+
         });
     }
 
@@ -75,14 +73,16 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
         Task task;
 
-        OnTaskViewHolder mListener;
+        OnTaskViewHolder adapterListener;
+        OnSnackbarAction activityListener;
 
         Activity mContext;
 
         public TaskViewHolder(View itemView, Activity context, OnTaskViewHolder listener) {
             super(itemView);
 
-            mListener = listener;
+            adapterListener = listener;
+            activityListener = (OnSnackbarAction)context;
             mContext = context;
 
             taskStringTextView = (TextView) itemView.findViewById(R.id.task_string_textView);
@@ -141,7 +141,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
                         realm.commitTransaction();
                         realm.close();
 
-                        mListener.onDeleteTask();
+                        adapterListener.onDeleteTask();
 
                         SnackbarManager.show(Snackbar.with(mContext)
                                 .text("Task Deleted!")
@@ -158,7 +158,28 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
                                         oldTask.setTaskCompleted(taskCompleted);
                                         oldTask.setTaskList(taskList);
                                         realm.commitTransaction();
-                                        mListener.onDeleteTask();
+                                        adapterListener.onDeleteTask();
+                                    }
+                                })
+                                .eventListener(new EventListener() {
+                                    @Override
+                                    public void onShow(Snackbar snackbar) {
+                                        activityListener.onSnackBarShow(snackbar);
+                                    }
+
+                                    @Override
+                                    public void onShown(Snackbar snackbar) {
+
+                                    }
+
+                                    @Override
+                                    public void onDismiss(Snackbar snackbar) {
+                                        activityListener.onSnackBarDismiss(snackbar);
+                                    }
+
+                                    @Override
+                                    public void onDismissed(Snackbar snackbar) {
+
                                     }
                                 }), mContext);
 
@@ -180,6 +201,12 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
         public static interface OnTaskViewHolder{
             public void onDeleteTask();
+
+        }
+
+        public static interface OnSnackbarAction{
+            public void onSnackBarShow(Snackbar snackbar);
+            public void onSnackBarDismiss(Snackbar snackbar);
         }
 
     }
