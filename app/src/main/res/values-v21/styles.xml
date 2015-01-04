@@ -14,5 +14,15 @@
         <item name="android:navigationBarColor">@color/colorPrimary</item>
 
     </style>
+    
+    <style name="AppTheme.CustomToolbar" parent="Widget.AppCompat.Toolbar">
+        
+        <item name="android:actionOverflowMenuStyle">@style/AppTheme.Toolbar.CustomOverFlow</item>
+
+    </style>
+    
+    <style name="AppTheme.Toolbar.CustomOverFlow" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
 
 </resources>

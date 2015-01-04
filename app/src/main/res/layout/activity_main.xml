@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    >
 
     <Toolbar
         android:id="@+id/main_toolbar"
@@ -12,11 +13,11 @@
         android:layout_height="@dimen/toolbar_minimized_height"
         android:background="?android:colorPrimary"
         android:minHeight="56dp"
-        android:padding="16dp"
         android:title="@string/app_name"
-        android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+        android:theme="@style/AppTheme.Toolbar.CustomOverFlow"
         android:elevation="4dp"/>
 
+    <!--android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"-->
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

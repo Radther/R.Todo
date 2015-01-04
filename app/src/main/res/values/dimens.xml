@@ -8,6 +8,8 @@
     <dimen name="toolbar_maximised_height">128dp</dimen>
     <dimen name="toolbar_difference_height">72dp</dimen>
 
+    <dimen name="toolbar_maximised_height_extra16">144dp</dimen>
+
     <dimen name="twentyeight_dip">28dp</dimen>
     <dimen name="sixteen_dip">16dp</dimen>
 

@@ -59,6 +59,8 @@ public class MainActivity extends Activity implements TaskRecyclerAdapter.TaskVi
 
     private FrameLayout taskListFrameLayout;
 
+    private float fabYpositionDefault;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -158,6 +160,8 @@ public class MainActivity extends Activity implements TaskRecyclerAdapter.TaskVi
 
                     taskListFrameLayout.startAnimation(frameLayoutTranslateAnimation);
 
+//                    newTaskFab.setY(getResources().getDimension(R.dimen.toolbar_maximised_height_extra16));
+
                 }
                 else {
 
@@ -174,6 +178,8 @@ public class MainActivity extends Activity implements TaskRecyclerAdapter.TaskVi
                     frameLayoutTranslateAnimation.setDuration(200);
 
                     taskListFrameLayout.startAnimation(frameLayoutTranslateAnimation);
+
+//                    newTaskFab.setY(getWindowManager().getDefaultDisplay().getHeight()-getResources().getDimension(R.dimen.sixteen_dip));
 
                 }
 
